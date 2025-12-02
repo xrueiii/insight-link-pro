@@ -1,3 +1,4 @@
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ArticleGrid } from "./components/ArticleGrid";
 import { Pagination } from "./components/Pagination";
 import { articles } from "./config/articles";
@@ -23,10 +24,12 @@ export default async function LibraryPage({
       <div className="flex items-center justify-between px-6 py-6">
         <h1 className="text-2xl font-semibold text-slate-900 px-6">Library</h1>
 
-        <div className="flex items-center gap-3 text-black">
+        <div className="relative text-black">
+          <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+
           <input
             placeholder="Search"
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-black"
+            className="rounded-lg border border-slate-300 pl-10 pr-3 py-2 text-sm text-black w-64"
           />
         </div>
       </div>
