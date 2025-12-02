@@ -5,6 +5,7 @@ import type { Article } from "../config/articles";
 import { ArticleModal } from "./ArticleModal";
 
 export function ArticleCard({
+  id,
   title,
   author,
   publisher,
@@ -37,6 +38,7 @@ export function ArticleCard({
         open={open}
         onClose={() => setOpen(false)}
         article={{
+          id,
           title,
           author,
           publisher,
