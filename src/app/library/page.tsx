@@ -2,12 +2,14 @@ import { ArticleGrid } from "./components/ArticleGrid";
 import { Pagination } from "./components/Pagination";
 import { articles } from "./config/articles";
 
-export default function LibraryPage({
+export default async function LibraryPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const page = Number(searchParams.page) || 1;
+  const { page: pageParam } = await searchParams;
+
+  const page = Number(pageParam) || 1;
 
   const pageSize = 9;
   const totalItems = 584; // 假裝資料總數

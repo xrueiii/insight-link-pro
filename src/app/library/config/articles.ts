@@ -5,6 +5,7 @@ export type Article = {
   publisher: string;
   date: string; // ISO date string
   text: string; // ARTICLE_TEXT
+  summary?: string;
 };
 
 export const articles: Article[] = [
@@ -41,6 +42,7 @@ export const articles: Article[] = [
 
     — Julie Morita, M.D., Executive Vice President of the Robert Wood Johnson Foundation
     `,
+    summary: `Julie Morita reflects on her Japanese American parents’ history of discrimination—from WWII internment to post-9/11 anti-Muslim backlash—and how it inspired them to speak out against injustice. Seeing a surge in anti-Asian hate during COVID-19, she urges the public to recognize that racism harms both individuals and public health. Research shows negative online speech toward Asian Americans rose sharply during the pandemic, and such hostility discourages people from seeking care. Morita calls for compassion, unity, and support for Asian Americans as fellow victims of the virus, stressing that the nation will be judged by how it treats those in need.`,
   },
   {
     id: "2",
