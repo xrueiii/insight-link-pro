@@ -1,17 +1,23 @@
 "use client";
 
 import { IconButton } from "@/app/components/IconButton";
-import { ArrowUpTrayIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpTrayIcon,
+  ChevronUpIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { KeyboardEvent, useRef, useState } from "react";
 
 type Props = {
   onSend: (msg: string) => void;
   onPromptChange: (prompt: string) => void;
+  onFileLoaded: (text: string) => void; // ⭐ 新增
 };
 
-export function ChatInput({ onSend, onPromptChange }: Props) {
+export function ChatInput({ onSend, onPromptChange, onFileLoaded }: Props) {
   const [text, setText] = useState("");
+  const [fileName, setFileName] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState("custom");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -28,8 +34,8 @@ export function ChatInput({ onSend, onPromptChange }: Props) {
     const el = textareaRef.current;
     if (!el) return;
 
-    el.style.height = "auto"; // reset height
-    el.style.height = `${el.scrollHeight}px`; // adjust to content
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
   };
 
   const send = () => {
@@ -37,7 +43,6 @@ export function ChatInput({ onSend, onPromptChange }: Props) {
     onSend(text);
     setText("");
 
-    // reset height when sent
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
@@ -52,12 +57,11 @@ export function ChatInput({ onSend, onPromptChange }: Props) {
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3 relative">
-      {/* 第一排：Textarea（會自動增高） */}
+      {/* Textarea */}
       <div className="flex items-center bg-slate-50 rounded-lg px-3 py-2">
         <textarea
           ref={textareaRef}
-          className="w-full text-black resize-none bg-transparent 
-          text-sm outline-none leading-[1.8] overflow-hidden max-h-[100px] overflow-y-auto"
+          className="w-full text-black resize-none bg-transparent text-sm outline-none leading-[1.8] overflow-hidden max-h-[100px] overflow-y-auto"
           value={text}
           onChange={(e) => {
             setText(e.target.value);
@@ -69,16 +73,43 @@ export function ChatInput({ onSend, onPromptChange }: Props) {
         />
       </div>
 
-      {/* 第二排：upload + dropdown + send */}
+      {/* upload + dropdown + send */}
       <div className="flex items-center justify-between px-1 relative">
         <div className="flex items-center justify-between px-1 relative gap-3">
-          {/* Upload Button */}
+          {/* ⭐ Upload Button */}
           <label className="flex items-center gap-1 cursor-pointer text-slate-600 hover:text-black">
             <ArrowUpTrayIcon className="w-5 h-5" />
-            <input type="file" className="hidden" />
+
+            <input
+              type="file"
+              accept=".txt"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                const text = await file.text(); // ⭐ 讀取內容
+                setFileName(file.name);
+                onFileLoaded(text); // ⭐ 傳回 ChatSection
+              }}
+            />
           </label>
 
-          {/* Dropdown Button */}
+          {/* ---- File name preview ---- */}
+          {fileName && (
+            <div className="flex items-center gap-2 bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded-md">
+              <span>{fileName}</span>
+              <XMarkIcon
+                className="w-4 h-4 cursor-pointer hover:text-black"
+                onClick={() => {
+                  setFileName(null);
+                  onFileLoaded(""); // 清空
+                }}
+              />
+            </div>
+          )}
+
+          {/* Dropdown */}
           <div
             className="flex items-center border border-black rounded-full px-4 py-1 cursor-pointer select-none text-black hover:bg-gray-100"
             onClick={() => setOpenDropdown(!openDropdown)}
@@ -107,7 +138,7 @@ export function ChatInput({ onSend, onPromptChange }: Props) {
           )}
         </div>
 
-        {/* Send Button */}
+        {/* Send */}
         <IconButton onClick={send}>
           <PaperAirplaneIcon className="w-5 h-5" />
         </IconButton>
