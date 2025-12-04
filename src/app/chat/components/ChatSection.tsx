@@ -10,7 +10,11 @@ type Message = {
   content: string;
 };
 
-export function ChatSection() {
+type Props = {
+  onPromptChange: (prompt: string) => void;
+};
+
+export function ChatSection({ onPromptChange }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [typing, setTyping] = useState(false);
 
@@ -45,17 +49,15 @@ export function ChatSection() {
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <section className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm h-full">
       <h1 className="text-2xl font-semibold text-black">AI Assistant</h1>
 
-      {/* 訊息列表 */}
-      <div className="flex flex-col gap-3 overflow-y-auto max-h-[65vh] pr-2">
+      <div className="flex-1 flex flex-col gap-3 overflow-y-auto pr-2">
         <ChatMessages messages={messages} typing={typing} />
         <div ref={bottomRef} />
       </div>
 
-      {/* 輸入框 */}
-      <ChatInput onSend={handleSend} />
+      <ChatInput onSend={handleSend} onPromptChange={onPromptChange} />
     </section>
   );
 }

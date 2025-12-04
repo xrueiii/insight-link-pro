@@ -9,7 +9,7 @@ export function IconButton({ children, className, ...props }: Props) {
   return (
     <button
       className={clsx(
-        "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm hover:bg-slate-100 transition",
+        "cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-sm hover:bg-slate-100 transition bg-black",
         className
       )}
       {...props}
